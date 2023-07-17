@@ -119,4 +119,8 @@ aggregate(
 
 Portanto, esses são exemplos de vários que surgem no dia-a-dia de um analista em geoprocessamento e que de forma simples pode ser respondida e preenchida em uma tabela de atrinutos de um arquivo vetorial!
 
+### Autor
+**Rogerio Vidal de Siqueira**
+
+<a href="https://www.linkedin.com/in/rogerio-vidal-de-siqueira-9478aa136/" target="_blank" rel="noopener noreferrer">Meu Linkdin</a>
 
