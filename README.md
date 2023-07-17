@@ -47,3 +47,76 @@ Já que abordamos a sintaxe, podemos trazer a expressão que soluciona o questio
 ```
 aggregate(layer:='estações_ferroviárias',aggregate:='sum',expression:="passageiros")
 ```
+## Acrescentando relações espaciais
+O que é mais legal em utilizar aggregate é a possibilidade de usar relações espacais nas consultas. Por exemplo: "Qual á área de intersecção entre unidades de conservação (UC) de gestão do IBRAM e áreas de proteção de manancial (APM)?" Neste caso, há APMs que fazem intersecção entre mais de uma UC, portanto é interessante mostrar qual unidade e qual a área de intersecção, ou seja, mostrar duas informações concatenadas: Nome da UC e Área (ha) de intersecção.
+Pessando nessa problemática, criei a seguinte expressão: 
+
+```
+/*
+Medir a área que faz intersecção entre as Áreas de Proteção de Manancial
+*/
+aggregate(
+	'Unidades_de_Conserva__o_Gest_o_IBRAM_f52ffc88_d98a_4ecc_a0e6_408c9cd4381d',                                 
+	'concatenate',                                           
+	concat("sigla",
+			to_string(': '),
+			to_string(
+						round(
+							area(intersection(geometry(@parent),$geometry)),3)
+							)
+					),
+	concatenator:=', ',                           
+	filter:=intersects(geometry(@parent),$geometry)
+)
+```
+Também é interessante mostrar a proporção em % da área de intersecção:
+```
+/*
+Medir a área em (%) que faz intersecção entre as Áreas de Proteção de Manancial
+*/
+aggregate(
+	'Unidades_de_Conserva__o_Gest_o_IBRAM_f52ffc88_d98a_4ecc_a0e6_408c9cd4381d',                                 
+	'concatenate',                                           
+	concat("sigla",
+			to_string(': '),
+			 round(area(intersection(geometry(@parent),$geometry))/area(geometry(@parent))*100,2),
+			 to_string('%')
+			)							,
+	concatenator:=', ',                           
+	filter:=intersects(geometry(@parent),$geometry)
+)
+```
+Outra questão que pode surgir: Qual o volume das outorgas superficiais que fazem intersecção entre as APMs? 
+Segue a solução: 
+
+```
+/*
+Somar o volume (v_max) das outorgas superficiais que faz intersecção entre as Áreas de Proteção de Manancial
+*/
+aggregate(
+	'Outorga_Capta__o_Superficial',                        
+	'sum',
+	"v_max",
+	filter:=intersects(geometry(@parent),$geometry) 
+)
+```
+Um outro exemplo que também vale a pena ser ilustado é: Qual a soma das áreas dos imoveis rurais cadastrados pela SEAGRE com status 'Contrato Assinado' faz intersecção entre as AMPs? 
+O bacana dessa solução é que além de usar a relação espacial, foi realizado um refinamento no filtro.
+```
+/*
+a10
+Somar a dos imoveis rurais cadastrados pela SEAGRI que faz intersecção entre as Áreas de Proteção de Manancial
+Status -  'CONTRATO ASSINADO'
+*/
+aggregate(
+	'processos_seagri___ativos',                        
+	'sum',
+	round(area(intersection(geometry(@parent),$geometry)),3),
+	filter:=intersects(geometry(@parent),$geometry) 
+	and "status" like 'CONTRATO ASSINADO' 
+)
+```
+
+Portanto, esses são exemplos de vários que surgem no dia-a-dia de um analista em geoprocessamento e que de forma simples pode ser respondida e preenchida em uma tabela de atrinutos de um arquivo vetorial!
+
+
