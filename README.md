@@ -104,7 +104,6 @@ Um outro exemplo que também vale a pena ser ilustado é: Qual a soma das áreas
 O bacana dessa solução é que além de usar a relação espacial, foi realizado um refinamento no filtro.
 ```
 /*
-a10
 Somar a dos imoveis rurais cadastrados pela SEAGRI que faz intersecção entre as Áreas de Proteção de Manancial
 Status -  'CONTRATO ASSINADO'
 */
