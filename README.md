@@ -1,4 +1,4 @@
-# Uso de espressões aggregate e relação espacial no Qgis
+# Uso de expressões aggregate e relação espacial no Qgis
 
 O QGIS possui uma poderosa funcionalidade chamada aggregate que permite agrupar, resumir, totalizar valores e geometrias. O que o torna mais interessante, ao meu ver, é a possibilidade de acrescentar relações espaciais: **Equals, Disjoint, Intersects, Within, Touches, Crosses e Overlaps**. 
 
